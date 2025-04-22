@@ -5,12 +5,12 @@ import MagicString from 'magic-string';
 export const transform = async (options: {
   filename: string;
   content: string;
-  sourcemap?: boolean;
+  sourcemap?: 'inline' | 'external' | false;
   libraryTransform: Array<{
     libraryName: string;
     format: (localName: string, importedName: string) => string;
   }>;
-}): Promise<string> => {
+}) => {
   const { filename, content, libraryTransform } = options;
   const fileExt = extname(filename);
   const isTs = fileExt === '.ts' || fileExt === '.tsx';
@@ -59,24 +59,38 @@ export const transform = async (options: {
   ast.program.body.map(traverseStatement);
 
   if (!codeUpdate.length) {
-    return content;
+    return {
+      converted: false,
+      code: content,
+    };
   }
 
   codeUpdate.reverse().forEach((update) => {
     magicString.overwrite(update.start, update.end, update.updateImports);
   });
 
-  const code = magicString.toString();
+  let map: string | undefined;
+
+  let code = magicString.toString();
+
   if (options.sourcemap) {
-    const map = magicString
-      .generateMap({
-        source: filename,
-        includeContent: true,
-        hires: true,
-      })
-      .toUrl();
-    return code + '\n//# sourceMappingURL=' + map;
+    const mapObj = magicString.generateMap({
+      source: filename,
+      file: filename.replace(fileExt, '.js.map'),
+      includeContent: true,
+      hires: true,
+    });
+
+    if (options.sourcemap === 'inline') {
+      code += '\n//# sourceMappingURL=' + mapObj.toUrl();
+    } else {
+      map = mapObj.toString();
+    }
   }
 
-  return code;
+  return {
+    converted: true,
+    code,
+    map,
+  };
 };

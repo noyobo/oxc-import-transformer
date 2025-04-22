@@ -7,7 +7,7 @@ describe('transform', () => {
   it('should transform a.tsx', async () => {
     const file = join(__dirname, './fixtures', 'a.tsx');
     const content = await readFile(file, 'utf8');
-    const code = await transform({
+    const result = await transform({
       filename: file,
       content,
       sourcemap: false,
@@ -21,7 +21,9 @@ describe('transform', () => {
       ],
     });
 
-    expect(code).toMatchInlineSnapshot(`
+    expect(result.converted).toBe(true);
+    expect(result.map).toBeUndefined();
+    expect(result.code).toMatchInlineSnapshot(`
       "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
       import Button from '@ray-js/smart-ui/lib/Button';
 
@@ -44,10 +46,10 @@ describe('transform', () => {
   it('should transform b.tsx', async () => {
     const file = join(__dirname, './fixtures', 'b.tsx');
     const content = await readFile(file, 'utf8');
-    const code = await transform({
+    const result = await transform({
       filename: file,
       content,
-      sourcemap: false,
+      sourcemap: 'external',
       libraryTransform: [
         {
           libraryName: '@ray-js/smart-ui',
@@ -63,8 +65,9 @@ describe('transform', () => {
         },
       ],
     });
-
-    expect(code).toMatchInlineSnapshot(`
+    expect(result.converted).toBe(true);
+    expect(result.map).toContain('"version":3');
+    expect(result.code).toMatchInlineSnapshot(`
       "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
       import Btn from '@ray-js/smart-ui/lib/Button';
       import Picker from '@ray-js/ui-smart/lib/Picker';

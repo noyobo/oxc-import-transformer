@@ -1,4 +1,5 @@
 import { ActionSheet, Button as Btn } from '@ray-js/smart-ui';
+import { Picker } from '@ray-js/ui-smart';
 
 export default () => {
   return (
@@ -9,6 +10,7 @@ export default () => {
       }}
     >
       <ActionSheet>hello</ActionSheet>
+      <Picker>hello</Picker>
     </Btn>
   );
 };

@@ -1,0 +1,65 @@
+import {join} from 'path';
+import {transform} from '../src';
+import {describe, expect, it} from 'vitest'
+
+describe('transform', () => {
+  it('should transform a.tsx', async () => {
+    const file = join(__dirname, './fixtures', 'a.tsx')
+    const code = await transform(file, {
+      sourcemap: true,
+      libraryName: '@ray-js/smart-ui',
+      format: (localName: string, importedName: string) => {
+        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`
+      }
+    })
+
+    expect(code).toMatchInlineSnapshot(`
+      "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
+      import Button from '@ray-js/smart-ui/lib/Button';
+
+      export default () => {
+        return (
+          <Button
+            title="hello"
+            onClick={() => {
+              console.log('hello');
+            }}
+          >
+            <span>hello</span>
+          </Button>
+        );
+      }
+      // # sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9ub3lvYm8vaG9tZS9naXRodWIvb3hjLWltcG9ydC1wbHVnaW4vX190ZXN0c19fL2ZpeHR1cmVzL2EudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEFjdGlvblNoZWV0LCBCdXR0b24gfSBmcm9tICdAcmF5LWpzL3NtYXJ0LXVpJztcblxuZXhwb3J0IGRlZmF1bHQgKCkgPT4ge1xuICByZXR1cm4gKFxuICAgIDxCdXR0b25cbiAgICAgIHRpdGxlPVwiaGVsbG9cIlxuICAgICAgb25DbGljaz17KCkgPT4ge1xuICAgICAgICBjb25zb2xlLmxvZygnaGVsbG8nKTtcbiAgICAgIH19XG4gICAgPlxuICAgICAgPHNwYW4+aGVsbG88L3NwYW4+XG4gICAgPC9CdXR0b24+XG4gICk7XG59Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQUE7O0FBRUEsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDckIsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDVCxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDO0FBQ1YsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDbEIsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDckIsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUM1QixDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDO0FBQ1AsQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUNKLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUN2QixDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUNaLENBQUMsQ0FBQyxDQUFDO0FBQ0gifQ=="
+    `)
+  });
+
+  it('should transform b.tsx', async () => {
+    const file = join(__dirname, './fixtures', 'b.tsx')
+    const code = await transform(file, {
+      sourcemap: true,
+      libraryName: '@ray-js/smart-ui',
+      format: (localName: string, importedName: string) => {
+        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`
+      }
+    })
+
+    expect(code).toMatchInlineSnapshot(`
+      "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
+      import Btn from '@ray-js/smart-ui/lib/Button';
+
+      export default () => {
+        return (
+          <Btn
+            title="hello"
+            onClick={() => {
+              console.log('hello');
+            }}
+          >
+            <ActionSheet>hello</ActionSheet>
+          </Btn>
+        );
+      }
+      // # sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9ub3lvYm8vaG9tZS9naXRodWIvb3hjLWltcG9ydC1wbHVnaW4vX190ZXN0c19fL2ZpeHR1cmVzL2IudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEFjdGlvblNoZWV0LCBCdXR0b24gYXMgQnRuIH0gZnJvbSAnQHJheS1qcy9zbWFydC11aSc7XG5cbmV4cG9ydCBkZWZhdWx0ICgpID0+IHtcbiAgcmV0dXJuIChcbiAgICA8QnRuXG4gICAgICB0aXRsZT1cImhlbGxvXCJcbiAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgY29uc29sZS5sb2coJ2hlbGxvJyk7XG4gICAgICB9fVxuICAgID5cbiAgICAgIDxBY3Rpb25TaGVldD5oZWxsbzwvQWN0aW9uU2hlZXQ+XG4gICAgPC9CdG4+XG4gICk7XG59Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQUE7O0FBRUEsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDckIsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDVCxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDO0FBQ1AsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDbEIsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDckIsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUM1QixDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDO0FBQ1AsQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUNKLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDckMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDVCxDQUFDLENBQUMsQ0FBQztBQUNIIn0="
+    `)
+  });
+})

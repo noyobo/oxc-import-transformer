@@ -1,6 +1,6 @@
-import {readFile} from 'fs/promises';
-import {ImportDeclaration, ImportSpecifier, parseAsync, Statement} from 'oxc-parser';
-import {extname} from 'path';
+import { readFile } from 'fs/promises';
+import { ImportDeclaration, ImportSpecifier, parseAsync, Statement } from 'oxc-parser';
+import { extname } from 'path';
 import MagicString from 'magic-string';
 
 export const transform = async (
@@ -24,15 +24,15 @@ export const transform = async (
 
   function traverseStatement(statement: Statement) {
     if (statement.type === 'ImportDeclaration') {
-      const {source, specifiers} = statement as ImportDeclaration;
-      const {value} = source;
+      const { source, specifiers } = statement as ImportDeclaration;
+      const { value } = source;
       if (value === options.libraryName) {
         const start = statement.start;
         const end = statement.end;
         const updateImports = specifiers
           .map((specifier) => {
             if (specifier.type === 'ImportSpecifier') {
-              const {local, imported} = specifier as ImportSpecifier;
+              const { local, imported } = specifier as ImportSpecifier;
               const localName = local.name;
               let importedName: string;
               if (imported.type === 'Identifier') {
@@ -54,13 +54,15 @@ export const transform = async (
   ast.program.body.map(traverseStatement);
   const code = magicString.toString();
   if (options.sourcemap) {
-    const map = magicString.generateMap({
-      source: file_path,
-      includeContent: true,
-      hires: true,
-    }).toUrl()
-    return code + '\n// # sourceMappingURL=' + map
+    const map = magicString
+      .generateMap({
+        source: file_path,
+        includeContent: true,
+        hires: true,
+      })
+      .toUrl();
+    return code + '\n//# sourceMappingURL=' + map;
   }
 
-  return code
-}
+  return code;
+};

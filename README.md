@@ -1,6 +1,4 @@
-# esbuild-build-es5
-
-Use the @swc/core transform to convert to ES5 for the esbuild plugin.
+# oxc-import-transformer
 
 [![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
@@ -21,3 +19,19 @@ Use the @swc/core transform to convert to ES5 for the esbuild plugin.
 [codecov-url]: https://codecov.io/gh/noyobo/oxc-import-tramsformer
 [commitizen-img]: https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
 [commitizen-url]: http://commitizen.github.io/cz-cli/
+
+## Usage
+
+```ts
+import { transform } from 'oxc-import-transformer';
+
+const file = '/path/to/file.ts';
+
+const code = transform(file, {
+  sourcemap: true,
+  libraryName: '@ray-js/smart-ui',
+  format: (localName: string, importedName: string) => {
+    return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
+  },
+});
+```

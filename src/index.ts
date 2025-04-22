@@ -59,7 +59,7 @@ export const transform = async (
       includeContent: true,
       hires: true,
     }).toUrl()
-    return code + '\n// # sourceMappingURL=' + map
+    return code + '\n//# sourceMappingURL=' + map
   }
 
   return code

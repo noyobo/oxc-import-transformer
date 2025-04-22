@@ -1,16 +1,24 @@
 import { join } from 'path';
 import { transform } from '../src';
 import { describe, expect, it } from 'vitest';
+import { readFile } from 'node:fs/promises';
 
 describe('transform', () => {
   it('should transform a.tsx', async () => {
     const file = join(__dirname, './fixtures', 'a.tsx');
-    const code = await transform(file, {
+    const content = await readFile(file, 'utf8');
+    const code = await transform({
+      filename: file,
+      content,
       sourcemap: false,
-      libraryName: '@ray-js/smart-ui',
-      format: (localName: string, importedName: string) => {
-        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
-      },
+      libraryTransform: [
+        {
+          libraryName: '@ray-js/smart-ui',
+          format: (localName: string, importedName: string) => {
+            return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
+          },
+        },
+      ],
     });
 
     expect(code).toMatchInlineSnapshot(`
@@ -35,17 +43,31 @@ describe('transform', () => {
 
   it('should transform b.tsx', async () => {
     const file = join(__dirname, './fixtures', 'b.tsx');
-    const code = await transform(file, {
+    const content = await readFile(file, 'utf8');
+    const code = await transform({
+      filename: file,
+      content,
       sourcemap: false,
-      libraryName: '@ray-js/smart-ui',
-      format: (localName: string, importedName: string) => {
-        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
-      },
+      libraryTransform: [
+        {
+          libraryName: '@ray-js/smart-ui',
+          format: (localName: string, importedName: string) => {
+            return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
+          },
+        },
+        {
+          libraryName: '@ray-js/ui-smart',
+          format: (localName: string, importedName: string) => {
+            return `import ${localName} from '@ray-js/ui-smart/lib/${importedName}';`;
+          },
+        },
+      ],
     });
 
     expect(code).toMatchInlineSnapshot(`
       "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
       import Btn from '@ray-js/smart-ui/lib/Button';
+      import Picker from '@ray-js/ui-smart/lib/Picker';
 
       export default () => {
         return (
@@ -56,6 +78,7 @@ describe('transform', () => {
             }}
           >
             <ActionSheet>hello</ActionSheet>
+            <Picker>hello</Picker>
           </Btn>
         );
       };

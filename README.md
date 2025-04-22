@@ -24,14 +24,28 @@
 
 ```ts
 import { transform } from 'oxc-import-transformer';
+import { readFileSync } from 'node:fs';
 
 const file = '/path/to/file.ts';
+const content = readFileSync(file, 'utf-8');
 
-const code = transform(file, {
-  sourcemap: true,
-  libraryName: '@ray-js/smart-ui',
-  format: (localName: string, importedName: string) => {
-    return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
-  },
+const code = await transform({
+  filename: file,
+  content,
+  sourcemap: false,
+  libraryTransform: [
+    {
+      libraryName: '@ray-js/smart-ui',
+      format: (localName: string, importedName: string) => {
+        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
+      },
+    },
+    {
+      libraryName: '@ray-js/ui-smart',
+      format: (localName: string, importedName: string) => {
+        return `import ${localName} from '@ray-js/ui-smart/lib/${importedName}';`;
+      },
+    },
+  ],
 });
 ```

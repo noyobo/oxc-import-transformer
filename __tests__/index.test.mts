@@ -1,17 +1,17 @@
-import {join} from 'path';
-import {transform} from '../src';
-import {describe, expect, it} from 'vitest'
+import { join } from 'path';
+import { transform } from '../src';
+import { describe, expect, it } from 'vitest';
 
 describe('transform', () => {
   it('should transform a.tsx', async () => {
-    const file = join(__dirname, './fixtures', 'a.tsx')
+    const file = join(__dirname, './fixtures', 'a.tsx');
     const code = await transform(file, {
       sourcemap: false,
       libraryName: '@ray-js/smart-ui',
       format: (localName: string, importedName: string) => {
-        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`
-      }
-    })
+        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
+      },
+    });
 
     expect(code).toMatchInlineSnapshot(`
       "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
@@ -28,19 +28,20 @@ describe('transform', () => {
             <span>hello</span>
           </Button>
         );
-      }"
-    `)
+      };
+      "
+    `);
   });
 
   it('should transform b.tsx', async () => {
-    const file = join(__dirname, './fixtures', 'b.tsx')
+    const file = join(__dirname, './fixtures', 'b.tsx');
     const code = await transform(file, {
       sourcemap: false,
       libraryName: '@ray-js/smart-ui',
       format: (localName: string, importedName: string) => {
-        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`
-      }
-    })
+        return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
+      },
+    });
 
     expect(code).toMatchInlineSnapshot(`
       "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
@@ -57,7 +58,8 @@ describe('transform', () => {
             <ActionSheet>hello</ActionSheet>
           </Btn>
         );
-      }"
-    `)
+      };
+      "
+    `);
   });
-})
+});

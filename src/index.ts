@@ -22,6 +22,8 @@ export const transform = async (
 
   const magicString = new MagicString(content);
 
+  let hasUpdate = false;
+
   function traverseStatement(statement: Statement) {
     if (statement.type === 'ImportDeclaration') {
       const { source, specifiers } = statement as ImportDeclaration;
@@ -47,11 +49,17 @@ export const transform = async (
           .filter(Boolean)
           .join('\n');
         magicString.update(start, end, updateImports);
+        hasUpdate = true;
       }
     }
   }
 
   ast.program.body.map(traverseStatement);
+
+  if (!hasUpdate) {
+    return content;
+  }
+
   const code = magicString.toString();
   if (options.sourcemap) {
     const map = magicString

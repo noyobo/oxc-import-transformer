@@ -11,4 +11,4 @@ export default () => {
       <ActionSheet>hello</ActionSheet>
     </Btn>
   );
-}
+};

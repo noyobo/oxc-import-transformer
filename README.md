@@ -49,3 +49,25 @@ const code = await transform({
   ],
 });
 ```
+
+## Benchmark
+
+vs [babel-plugin-import](https://www.npmjs.com/package/babel-plugin-import)
+
+```
+Benchmarking is an experimental feature.
+Breaking changes might not follow SemVer, please pin Vitest's version when using it.
+
+ RUN  v3.1.2 /Users/runner/work/oxc-import-transformer/oxc-import-transformer
+
+
+ ✓ __tests__/index.bench.mts > transform 1285ms
+     name                   hz     min      max    mean     p75      p99     p995     p999     rme  samples
+   · babel transform    288.76  1.1712  12.3138  3.4631  4.3863  11.2988  12.3138  12.3138  ±8.96%      145
+   · oxc transform    6,113.60  0.0724   7.3846  0.1636  0.1462   0.8301   1.5227   3.5838  ±5.81%     3057   fastest
+
+ BENCH  Summary
+
+  oxc transform - __tests__/index.bench.mts > transform
+    21.17x faster than babel transform
+```

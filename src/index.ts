@@ -78,9 +78,10 @@ export const transform = async (options: {
   let code = magicString.toString();
 
   if (options.sourcemap) {
+    const mapFile = filename.substring(0, filename.length - fileExt.length) + '.js.map';
     const mapObj = magicString.generateMap({
       source: filename,
-      file: filename.replace(fileExt, '.js.map'),
+      file: mapFile,
       includeContent: true,
       hires: true,
     });

@@ -15,7 +15,7 @@ describe('transform', () => {
         {
           libraryName: '@ray-js/smart-ui',
           format: (localName: string, importedName: string) => {
-            return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
+            return `import { ${importedName} } from '@ray-js/smart-ui/lib/${importedName}';`;
           },
         },
       ],
@@ -24,8 +24,8 @@ describe('transform', () => {
     expect(result.converted).toBe(true);
     expect(result.map).toBeUndefined();
     expect(result.code).toMatchInlineSnapshot(`
-      "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
-      import Button from '@ray-js/smart-ui/lib/Button';
+      "import { ActionSheet } from '@ray-js/smart-ui/lib/ActionSheet';
+      import { Button } from '@ray-js/smart-ui/lib/Button';
 
       export default () => {
         return (
@@ -54,13 +54,16 @@ describe('transform', () => {
         {
           libraryName: '@ray-js/smart-ui',
           format: (localName: string, importedName: string) => {
-            return `import ${localName} from '@ray-js/smart-ui/lib/${importedName}';`;
+            if (localName !== importedName) {
+              return `import { ${importedName} as ${localName} } from '@ray-js/smart-ui/lib/${importedName}';`;
+            }
+            return `import { ${importedName} } from '@ray-js/smart-ui/lib/${importedName}';`;
           },
         },
         {
           libraryName: '@ray-js/ui-smart',
           format: (localName: string, importedName: string) => {
-            return `import ${localName} from '@ray-js/ui-smart/lib/${importedName}';`;
+            return `import { ${importedName} } from '@ray-js/ui-smart/lib/${importedName}';`;
           },
         },
       ],
@@ -68,9 +71,9 @@ describe('transform', () => {
     expect(result.converted).toBe(true);
     expect(result.map).toContain('"version":3');
     expect(result.code).toMatchInlineSnapshot(`
-      "import ActionSheet from '@ray-js/smart-ui/lib/ActionSheet';
-      import Btn from '@ray-js/smart-ui/lib/Button';
-      import Picker from '@ray-js/ui-smart/lib/Picker';
+      "import { ActionSheet } from '@ray-js/smart-ui/lib/ActionSheet';
+      import { Button as Btn } from '@ray-js/smart-ui/lib/Button';
+      import { Picker } from '@ray-js/ui-smart/lib/Picker';
 
       export default () => {
         return (

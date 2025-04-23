@@ -1,5 +1,5 @@
 import { ImportDeclaration, ImportSpecifier, parseAsync, Statement } from 'oxc-parser';
-import { extname } from 'path';
+import { extname } from 'node:path';
 import MagicString from 'magic-string';
 
 export const transform = async (options: {
@@ -22,9 +22,12 @@ export const transform = async (options: {
 
   const magicString = new MagicString(content);
 
-  const codeUpdate = [];
-
   function traverseStatement(statement: Statement) {
+    const codeUpdates: Array<{
+      start: number;
+      end: number;
+      content: string;
+    }> = [];
     if (statement.type === 'ImportDeclaration') {
       const { source, specifiers } = statement as ImportDeclaration;
       const { value } = source;
@@ -51,22 +54,23 @@ export const transform = async (options: {
           .filter(Boolean)
           .join('\n');
 
-        codeUpdate.push({ start, end, updateImports });
+        codeUpdates.push({ start, end, content: updateImports });
       }
     }
+    return codeUpdates;
   }
 
-  ast.program.body.map(traverseStatement);
+  const codeUpdates = ast.program.body.map(traverseStatement).flat();
 
-  if (!codeUpdate.length) {
+  if (!codeUpdates.length) {
     return {
       converted: false,
       code: content,
     };
   }
 
-  codeUpdate.reverse().forEach((update) => {
-    magicString.overwrite(update.start, update.end, update.updateImports);
+  codeUpdates.reverse().forEach((update) => {
+    magicString.overwrite(update.start, update.end, update.content);
   });
 
   let map: string | undefined;

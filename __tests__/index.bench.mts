@@ -2,7 +2,7 @@ import { transformAsync } from '@babel/core';
 import { readFileSync } from 'node:fs';
 import { join } from 'path';
 import { bench, describe } from 'vitest';
-import { transform } from '../src';
+import { transform } from '../src/index.ts';
 
 const file = join(__dirname, './fixtures', 'a.tsx');
 const code = readFileSync(file, 'utf-8');

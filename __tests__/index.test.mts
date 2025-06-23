@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { transform } from '../src';
+import { transform } from '../src/index.ts';
 import { describe, expect, it } from 'vitest';
 import { readFile } from 'node:fs/promises';
 

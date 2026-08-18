@@ -21,6 +21,7 @@
     }
   },
   "license": "MIT",
+  "packageManager": "pnpm@10.12.2",
   "dependencies": {
     "magic-string": "^1.2.0",
     "oxc-parser": "^0.144.0"

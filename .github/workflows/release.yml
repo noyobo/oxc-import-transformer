@@ -6,32 +6,32 @@ on:
         description: 'Semantic version (major | minor | patch | premajor | preminor | prepatch | prerelease)'
         default: 'patch'
         required: true
+permissions:
+  contents: write
 jobs:
   publish:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Checkout
+      - uses: actions/checkout@v5
+      - name: Configure git
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build package
-        run: pnpm build
-      - name: Test project
-        run: pnpm test
-      - name: Update version and generate release notes
-        run: npx standard-version --release-as ${{ github.event.inputs.version }}
-      - name: Publish to npm
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
-          pnpm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Build package
+        run: bun run build
+      - name: Test project
+        run: bun run test
+      - name: Update version and generate release notes
+        run: bunx standard-version --release-as ${{ github.event.inputs.version }}
+      - name: Publish to npm
+        run: bun publish --access public
+        env:
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Push changes
+        run: git push --follow-tags origin HEAD:${{ github.ref_name }}

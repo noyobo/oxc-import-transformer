@@ -1,27 +1,19 @@
 {
   "name": "oxc-import-transformer",
   "version": "1.1.1",
-  "type": "commonjs",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "type": "module",
+  "main": "./dist/index.js",
   "files": [
     "dist"
   ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.12.2",
   "dependencies": {
     "magic-string": "^1.2.0",
     "oxc-parser": "^0.144.0"
@@ -40,8 +32,9 @@
     "vitest": "^4.1.10"
   },
   "scripts": {
-    "build": "tsup ./src/index.ts --format cjs,esm --dts --clean",
+    "build": "tsup ./src/index.ts --format esm --clean && tsc -p tsconfig.build.json",
     "bench": "vitest bench --run",
     "test": "vitest --run"
-  }
+  },
+  "types": "./dist/index.d.ts"
 }

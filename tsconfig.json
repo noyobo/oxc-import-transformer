@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "types": ["node"]
   }
 }

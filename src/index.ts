@@ -41,10 +41,7 @@ export const transform = async (options: {
             if (specifier.type === 'ImportSpecifier') {
               const { local, imported } = specifier as ImportSpecifier;
               const localName = local.name;
-              let importedName: string;
-              if (imported.type === 'Identifier') {
-                importedName = imported.name;
-              }
+              const importedName = 'name' in imported ? imported.name : imported.value;
               const newSpecifier = currentLibraryTransform.format(localName, importedName);
               if (newSpecifier) {
                 return newSpecifier;

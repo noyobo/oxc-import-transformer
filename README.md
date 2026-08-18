@@ -20,6 +20,15 @@
 [commitizen-img]: https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
 [commitizen-url]: http://commitizen.github.io/cz-cli/
 
+## Install
+
+```bash
+bun add oxc-import-transformer
+```
+
+> **ESM only.** This package ships as ES modules (`"type": "module"`) and cannot be loaded with `require()`.
+> Both runtime dependencies (`oxc-parser`, `magic-string`) are ESM-only as well.
+
 ## Usage
 
 ```ts
@@ -58,16 +67,27 @@ vs [babel-plugin-import](https://www.npmjs.com/package/babel-plugin-import)
 Benchmarking is an experimental feature.
 Breaking changes might not follow SemVer, please pin Vitest's version when using it.
 
- RUN  v3.1.2 /Users/runner/work/oxc-import-transformer/oxc-import-transformer
+ RUN  v4.1.10 /Users/runner/work/oxc-import-transformer/oxc-import-transformer
 
 
- ✓ __tests__/index.bench.mts > transform 1285ms
-     name                   hz     min      max    mean     p75      p99     p995     p999     rme  samples
-   · babel transform    288.76  1.1712  12.3138  3.4631  4.3863  11.2988  12.3138  12.3138  ±8.96%      145
-   · oxc transform    6,113.60  0.0724   7.3846  0.1636  0.1462   0.8301   1.5227   3.5838  ±5.81%     3057   fastest
+ ✓ __tests__/index.bench.mts > transform 1214ms
+     name                    hz     min      max    mean     p75     p99    p995    p999     rme  samples
+   · babel transform   1,790.26  0.3698   6.8742  0.5586  0.5389  3.1573  5.2055  6.8742  ±5.86%      896
+   · oxc transform    33,031.21  0.0234  12.7746  0.0303  0.0281  0.0390  0.0545  0.1877  ±6.25%    16516
 
  BENCH  Summary
 
   oxc transform - __tests__/index.bench.mts > transform
-    21.17x faster than babel transform
+    18.45x faster than babel transform
+```
+
+## Development
+
+This repo uses [Bun](https://bun.sh) as its package manager.
+
+```bash
+bun install
+bun run test
+bun run bench
+bun run build
 ```

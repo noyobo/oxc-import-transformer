@@ -1,4 +1,4 @@
-import { ImportDeclaration, ImportSpecifier, parseAsync, Statement } from 'oxc-parser';
+import { ImportDeclaration, ImportSpecifier, parse, Statement } from 'oxc-parser';
 import { extname } from 'node:path';
 import MagicString from 'magic-string';
 
@@ -15,7 +15,7 @@ export const transform = async (options: {
   const fileExt = extname(filename);
   const isTs = fileExt === '.ts' || fileExt === '.tsx';
 
-  const ast = await parseAsync(filename, content, {
+  const ast = await parse(filename, content, {
     lang: fileExt.substring(1) as 'js' | 'jsx' | 'ts' | 'tsx',
     astType: isTs ? 'ts' : 'js',
   });
